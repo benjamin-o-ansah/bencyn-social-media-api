@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.models import Follow
+from follows.models import Follow
 from rest_framework import viewsets, permissions
 from .models import Post
 from .serializers import PostSerializer

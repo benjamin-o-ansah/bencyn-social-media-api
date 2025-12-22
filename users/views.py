@@ -1,11 +1,11 @@
 # users/views.py
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
-from rest_framework import status,viewsets, permissions
+from rest_framework import status,viewsets, permissions,generics
 from django.contrib.auth.models import User
-from .models import Follow
-from .serializers import UserSerializer
+from follows.models import Follow
+from .serializers import UserSerializer,UserRegistrationSerializer
 
 class FollowUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -28,6 +28,9 @@ class FollowUserView(APIView):
         )
         return Response({"message": "User followed"}, status=201)
 
+class RegisterUserView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [AllowAny]
 
 class UnfollowUserView(APIView):
     permission_classes = [IsAuthenticated]

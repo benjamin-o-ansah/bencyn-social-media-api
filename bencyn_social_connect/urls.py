@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # API apps
-    path('api/users/', include('bencyn_social_connect.users.urls')),
-    path('api/posts/', include('bencyn_social_connect.posts.urls')),
-    path('api/follows/', include('bencyn_social_connect.follows.urls')),
+    path('api/users/', include('users.urls')),
+    path('api/posts/', include('posts.urls')),
+    path('api/follows/', include('follows.urls')),
 ]
