@@ -29,10 +29,10 @@ urlpatterns = [
 
     # API apps
     path('api/users/', include('users.urls')),
-    path('api/posts/', include('posts.urls')),
+    path('api/', include('posts.urls')),
     path('api/follows/', include('follows.urls')),
     path('api/notifications/', include('notifications.urls')),
     path('api/interactions/', include('interactions.urls')),
-    path('/api/messages/',include('messaging.urls')),
+    path('api/messages/',include('messaging.urls')),
     path('api/reposts/', include('reposts.urls')),
 ]

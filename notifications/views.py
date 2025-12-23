@@ -11,6 +11,19 @@ class NotificationListView(generics.ListAPIView):
         return Notification.objects.filter(
             recipient=self.request.user
         )
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        return response.Response(
+            {
+                "status": "success",
+                "message": "Notifications retrieved successfully",
+                "count": queryset.count(),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
 class MarkNotificationReadView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -21,4 +34,8 @@ class MarkNotificationReadView(views.APIView):
         )
         notification.is_read = True
         notification.save()
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return response.Response(
+            {
+            "status": "ok",
+            "message": "Success",},
+            status=status.HTTP_204_NO_CONTENT)

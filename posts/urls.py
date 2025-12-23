@@ -3,7 +3,7 @@ from .views import PostViewSet, FeedView
 from django.urls import path
 
 router = DefaultRouter()
-router.register("posts", PostViewSet, basename="posts")
+router.register(r"posts", PostViewSet, basename="post")
 
 urlpatterns = router.urls + [
     path("feed/", FeedView.as_view(), name="feed"),

@@ -19,4 +19,7 @@ class RepostView(views.APIView):
             original_post=post
         )
 
-        return response.Response({'detail': 'Post reposted'}, status=201)
+        return response.Response({
+            "status": "success",
+            "message": "Post reposted",
+            }, status=201)

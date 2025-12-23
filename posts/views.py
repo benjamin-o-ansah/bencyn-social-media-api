@@ -1,6 +1,6 @@
 from django.shortcuts import render
+from rest_framework import viewsets, permissions,response,status
 from follows.models import Follow
-from rest_framework import viewsets, permissions
 from .models import Post
 from .serializers import PostSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -23,20 +23,50 @@ class FeedView(ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # following_ids = Follow.objects.filter(
+        #     follower=self.request.user
+        # ).values_list("following_id", flat=True)
+        # queryset = Post.objects.filter(author_id__in=following_ids)
+        # # Optional filtering by ?search=keyword
+        # search = self.request.query_params.get('search')
+        # if search:
+        #     queryset = queryset.filter(content__icontains=search)
+        # # Optional filtering by ?date=YYYY-MM-DD
+        # date = self.request.query_params.get('date')
+        # if date:
+        #     queryset = queryset.filter(created_at__date=date)
+        #     return queryset.select_related('author')
+        
+        # return Post.objects.filter(
+        #     author_id__in=following_ids).select_related("author")
         following_ids = Follow.objects.filter(
             follower=self.request.user
         ).values_list("following_id", flat=True)
+
         queryset = Post.objects.filter(author_id__in=following_ids)
-        # Optional filtering by ?search=keyword
-        search = self.request.query_params.get('search')
+
+        # Optional search filter
+        search = self.request.query_params.get("search")
         if search:
             queryset = queryset.filter(content__icontains=search)
-        # Optional filtering by ?date=YYYY-MM-DD
-        date = self.request.query_params.get('date')
+
+        # Optional date filter
+        date = self.request.query_params.get("date")
         if date:
             queryset = queryset.filter(created_at__date=date)
-        return queryset.select_related('author')
 
-        return Post.objects.filter(
-            author_id__in=following_ids
-        ).select_related("author")
+        return queryset.select_related("author")
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        return response.Response(
+            {
+                "status": "success",
+                "message": "Feed retrieved successfully",
+                "count": queryset.count(),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
