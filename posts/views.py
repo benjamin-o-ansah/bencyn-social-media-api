@@ -55,7 +55,10 @@ class FeedView(ListAPIView):
         if date:
             queryset = queryset.filter(created_at__date=date)
 
-        return queryset.select_related("author")
+        # return queryset.select_related("author").prefetch_related("comments", "likes")
+        return Post.objects.filter(author_id__in=following_ids)\
+            .select_related("author")\
+            .prefetch_related("comments", "likes")
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()

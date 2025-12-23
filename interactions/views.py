@@ -43,3 +43,17 @@ class CommentCreateListView(generics.ListCreateAPIView):
         post = generics.get_object_or_404(Post, id=self.kwargs['post_id'])
         serializer.save(user=self.request.user, post=post)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True,context={'request': request})
+
+        return Response(
+            {
+                "status": "success",
+                "message": "Comments retrieved successfully",
+                "count": queryset.count(),
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
